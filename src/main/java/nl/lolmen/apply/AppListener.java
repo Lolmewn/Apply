@@ -22,7 +22,7 @@ public class AppListener implements Listener{
 		if(plugin.perm.getUser(event.getPlayer()).inGroup("not-applied") && ! (plugin.perm.getUser(event.getPlayer()).inGroup("applied") || plugin.perm.getUser(event.getPlayer()).inGroup("Moderator"))){
 			Bukkit.getServer().getScheduler().scheduleAsyncDelayedTask(new Main(), new Runnable(){
 				public void run() {
-					event.getPlayer().sendMessage("You have not been applied yet! Please type /apply to write your application!");
+					event.getPlayer().sendMessage("You have" + ChatColor.RED + " not  + " + ChatColor.GREEN + "been applied yet! Please type "+ ChatColor.GREEN + "/apply "+ ChatColor.WHITE+ "to write your application!");
 				}
 			}, 60L);
 		}			

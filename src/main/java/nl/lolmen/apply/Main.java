@@ -32,7 +32,6 @@ public class Main extends JavaPlugin{
 		checkPerm();
 		AppListener a = new AppListener(this);
 		getServer().getPluginManager().registerEvents(a, this);
-		getServer().getPluginManager().registerEvents(a, this);
 		new File("plugins/Apply/").mkdir();
 		new File("plugins/Apply/apps/").mkdir();
 	}
@@ -42,13 +41,16 @@ public class Main extends JavaPlugin{
 		if(test != null){
 			this.perm = PermissionsEx.getPermissionManager();
 			log.info("[Applications] Permissions Plugin found! (PEX)");
+		}else{
+			log.info("[Apply] PEX not found! Disabling!");
+			getServer().getPluginManager().disablePlugin(this);
 		}
 	}
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String str, String[] args){
 		if(str.equalsIgnoreCase("apply")){
 			if(sender instanceof Player){
-				Player p = (Player)sender;
+				final Player p = (Player)sender;
 				if(args.length == 1){
 					if(perm.getUser(p).inGroup("owner") || perm.getUser(p).inGroup("Admins") || perm.getUser(p).inGroup("Moderator")){
 						String get = args[0];
@@ -146,6 +148,11 @@ public class Main extends JavaPlugin{
 							p.sendMessage("Last thing: These are the rules.");
 							c.sendRules();
 							c.save();
+							getServer().getScheduler().scheduleAsyncDelayedTask(this, new Runnable(){
+								public void run() {
+									list.remove(p);
+								}
+							}, 320L);
 							list.remove(p);
 							for(Player pl: getServer().getOnlinePlayers()){
 								if(perm.getUser(p).inGroup("owner") || perm.getUser(p).inGroup("Moderator") || perm.getUser(p).inGroup("Admins")){
