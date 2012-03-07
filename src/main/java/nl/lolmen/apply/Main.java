@@ -76,14 +76,16 @@ public class Main extends JavaPlugin{
 					return true;
 				}
 				try{
-					p.sendMessage(ChatColor.RED + "IGN: " + ChatColor.WHITE + set.getString("player"));
-					p.sendMessage(ChatColor.RED + "Banned: " + ChatColor.WHITE + set.getString("banned"));
-					p.sendMessage(ChatColor.RED + "Good at: " + ChatColor.WHITE + set.getString("goodat"));
-					p.sendMessage(ChatColor.RED + "Name: " + ChatColor.WHITE + set.getString("name"));
-					p.sendMessage(ChatColor.RED + "Age: " + ChatColor.WHITE + set.getString("age"));
-					p.sendMessage(ChatColor.RED + "Country: " + ChatColor.WHITE + set.getString("country"));
-					p.sendMessage("Accept with /apply accept Reject with /apply deny");
-					this.lookingat.put(p, set.getString("player"));
+					while(set.next()){
+						p.sendMessage(ChatColor.RED + "IGN: " + ChatColor.WHITE + set.getString("player"));
+						p.sendMessage(ChatColor.RED + "Banned: " + ChatColor.WHITE + set.getString("banned"));
+						p.sendMessage(ChatColor.RED + "Good at: " + ChatColor.WHITE + set.getString("goodat"));
+						p.sendMessage(ChatColor.RED + "Name: " + ChatColor.WHITE + set.getString("name"));
+						p.sendMessage(ChatColor.RED + "Age: " + ChatColor.WHITE + set.getString("age"));
+						p.sendMessage(ChatColor.RED + "Country: " + ChatColor.WHITE + set.getString("country"));
+						p.sendMessage("Accept with /apply accept Reject with /apply deny");
+						this.lookingat.put(p, set.getString("player"));
+					}
 					return true;
 				}catch(Exception e){
 					p.sendMessage("An error occured while reading the application!");
