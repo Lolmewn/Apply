@@ -85,7 +85,9 @@ public class Main extends JavaPlugin{
 						p.sendMessage(ChatColor.RED + "Country: " + ChatColor.WHITE + set.getString("country"));
 						p.sendMessage("Accept with /apply accept Reject with /apply deny");
 						this.lookingat.put(p, set.getString("player"));
+						return true;
 					}
+					p.sendMessage("No players after all..");
 					return true;
 				}catch(Exception e){
 					p.sendMessage("An error occured while reading the application!");
