@@ -70,7 +70,7 @@ public class MySQL {
 	
 	public int executeStatement(String statement){
 		if(fault){
-			System.out.println("[RuneSkillz] Can't execute statement, something wrong with connection");
+			System.out.println("[Apply] Can't execute statement, something wrong with connection");
 			return 0;
 		}
 		try {
@@ -86,7 +86,7 @@ public class MySQL {
 	
 	public ResultSet executeQuery(String statement){
 		if(fault){
-			System.out.println("[RuneSkillz] Can't execute query, something wrong with connection");
+			System.out.println("[Apply] Can't execute query, something wrong with connection");
 			return null;
 		}
 		try {
@@ -102,7 +102,7 @@ public class MySQL {
 	
 	public void close(){
 		if(fault){
-			System.out.println("[RuneSkillz] Can't close connection, something wrong with it");
+			System.out.println("[Apply] Can't close connection, something wrong with it");
 			return;
 		}
 		try {

@@ -11,13 +11,13 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 public class Listeners implements Listener{
-	
+
 	private Main plugin;
-	
+
 	public Listeners(Main plugin){
 		this.plugin = plugin;
 	}
-	
+
 	@EventHandler
 	public void onSignChange(SignChangeEvent event){
 		if(event.isCancelled()){
@@ -34,26 +34,23 @@ public class Listeners implements Listener{
 			event.setLine(3, ChatColor.GREEN + "and start fun!");
 		}
 	}
-	
+
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event){
 		final String name = event.getPlayer().getName();
 		if(event.getPlayer().hasPermission("apply.check")){
-			Thread t = new Thread(new Runnable(){
-				public void run() {
-					ResultSet set = plugin.mysql.executeQuery("SELECT * FROM " + plugin.set.getTable() + " WHERE promoted=0");
-					if(set == null){
-						return;
-					}
-					try {
-						set.last();
-						Bukkit.getPlayer(name).sendMessage("There are " + set.getRow() + " applications waiting!");
-					} catch (SQLException e) {
-						e.printStackTrace();
-					}
-				}
-			});
-			t.start();
+
+			ResultSet set = plugin.mysql.executeQuery("SELECT * FROM " + plugin.set.getTable() + " WHERE promoted=0");
+			if(set == null){
+				return;
+			}
+			try {
+				set.last();
+				Bukkit.getPlayer(name).sendMessage("There are " + set.getRow() + " applications waiting!");
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+
 		}
 	}
 
