@@ -2,7 +2,9 @@ package nl.lolmen.apply;
 
 import java.io.File;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
@@ -20,8 +22,8 @@ public class Main extends JavaPlugin{
 	public PermissionManager perm;
 	public HashMap<Player, Applicant> list = new HashMap<Player, Applicant>();
 	public HashMap<Player, String> lookingat = new HashMap<Player, String>();
-	private Settings set;
-	private MySQL mysql;
+	protected Settings set;
+	protected MySQL mysql;
 	
 	public void onDisable() {
 		this.mysql.close();
@@ -33,7 +35,7 @@ public class Main extends JavaPlugin{
 		//new File("plugins/Apply/apps/").mkdir();
 		this.checkPerm();
 		this.set = new Settings();
-		this.getServer().getPluginManager().registerEvents(new Listeners(), this);
+		this.getServer().getPluginManager().registerEvents(new Listeners(this), this);
 		this.getServer().getPluginManager().registerEvents(new AppListener(this), this);
 		this.mysql = new MySQL(
 				this.set.getHost(), 
@@ -68,7 +70,7 @@ public class Main extends JavaPlugin{
 		if(p.hasPermission("apply.check")){
 			//has permission to check other's applications
 			if(args.length == 0){
-				ResultSet set = this.mysql.executeQuery("SELECT * FROM " + this.set.getTable() + " WHERE applied = 1 AND promoted = 0 ORDER BY player" );
+				ResultSet set = this.mysql.executeQuery("SELECT * FROM " + this.set.getTable() + " WHERE promoted = 0 ORDER BY player" );
 				if(set == null){
 					p.sendMessage("No players to apply! (or an error ocurred)");
 					return true;
@@ -85,12 +87,35 @@ public class Main extends JavaPlugin{
 					return true;
 				}catch(Exception e){
 					p.sendMessage("An error occured while reading the application!");
+					e.printStackTrace();
 					return true;
 				}
 			}
 			if(args[0].equalsIgnoreCase("accept")){
 				if(!this.lookingat.containsKey(p)){
 					sender.sendMessage("You have to see someone's application first. /apply");
+					return true;
+				}
+				String player = this.lookingat.get(p);
+				ResultSet set = this.mysql.executeQuery("SELECT * FROM " + this.set.getTable() + " WHERE player='" + player + "'");
+				if(set == null){
+					sender.sendMessage("Well that's just weird.. " + player + " is not in the database O.o");
+					return true;
+				}
+				try {
+					if(set.getInt("promoted") == 1 || !this.perm.getUser(player).inGroup("")){
+						p.sendMessage("Someone else already promoted him: " + set.getString("promoter"));
+						return true;
+					}
+					this.mysql.executeQuery("UPDATE " + this.set.getTable() + " SET promoter='" + sender.getName() + "', promoted=1 WHERE player='" + player + "'");
+					if(!this.perm.getUser(player).inGroup("Non-Applied")){
+						sender.sendMessage("He's not in the non-applied group anymore apparently!");
+						return true;
+					}
+					this.getServer().dispatchCommand(this.getServer().getConsoleSender(), "pex promote " + player);
+				} catch (SQLException e) {
+					p.sendMessage("An error occured while reading the application!");
+					e.printStackTrace();
 					return true;
 				}
 				

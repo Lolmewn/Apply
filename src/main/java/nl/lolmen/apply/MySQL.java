@@ -56,8 +56,8 @@ public class MySQL {
 				"name varchar(255), " +
 				"age varchar(255), " +
 				"country varchar(255), " +
-				"applied tinyint, " +
-				"promoted tinyint)");
+				"promoted tinyint, " +
+				"promoter varchar(255))");
 	}
 
 	public boolean isFault() {
