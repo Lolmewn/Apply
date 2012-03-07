@@ -72,7 +72,7 @@ public class Main extends JavaPlugin{
 			if(args.length == 0){
 				ResultSet set = this.mysql.executeQuery("SELECT * FROM " + this.set.getTable() + " WHERE promoted = 0 ORDER BY player" );
 				if(set == null){
-					p.sendMessage("No players to apply! (or an error ocurred)");
+					p.sendMessage("It seems there was an error.. Check the logs.");
 					return true;
 				}
 				try{
@@ -87,7 +87,7 @@ public class Main extends JavaPlugin{
 						this.lookingat.put(p, set.getString("player"));
 						return true;
 					}
-					p.sendMessage("No players after all..");
+					p.sendMessage("No players to apply!");
 					return true;
 				}catch(Exception e){
 					p.sendMessage("An error occured while reading the application!");
