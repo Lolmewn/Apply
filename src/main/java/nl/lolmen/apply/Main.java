@@ -1,12 +1,9 @@
 package nl.lolmen.apply;
 
 import java.io.File;
-import java.io.FileInputStream;
+import java.sql.ResultSet;
 import java.util.HashMap;
-import java.util.Properties;
 import java.util.logging.Logger;
-
-import nl.lolmen.apply.Applicant.todo;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -38,7 +35,13 @@ public class Main extends JavaPlugin{
 		this.set = new Settings();
 		this.getServer().getPluginManager().registerEvents(new Listeners(), this);
 		this.getServer().getPluginManager().registerEvents(new AppListener(this), this);
-		this.mysql = new MySQL(set.getHost(), set.getPort(), set.getUsername(), set.getPassword(), set.getDatabase(), set.getTable());
+		this.mysql = new MySQL(
+				this.set.getHost(), 
+				this.set.getPort(), 
+				this.set.getUsername(), 
+				this.set.getPassword(), 
+				this.set.getDatabase(), 
+				this.set.getTable());
 	}
 
 	private void checkPerm() {
@@ -53,7 +56,48 @@ public class Main extends JavaPlugin{
 	}
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String str, String[] args){
-		
+		if(!cmd.getName().equalsIgnoreCase("apply")){
+			return false;
+		}
+		if(!(sender instanceof Player)){
+			//TODO check the length
+			//TODO get MySQL applicants
+			return true;
+		}
+		Player p = (Player)sender;
+		if(p.hasPermission("apply.check")){
+			//has permission to check other's applications
+			if(args.length == 0){
+				ResultSet set = this.mysql.executeQuery("SELECT * FROM " + this.set.getTable() + " WHERE applied = 1 AND promoted = 0 ORDER BY player" );
+				if(set == null){
+					p.sendMessage("No players to apply! (or an error ocurred)");
+					return true;
+				}
+				try{
+					p.sendMessage(ChatColor.RED + "IGN: " + ChatColor.WHITE + set.getString("player"));
+					p.sendMessage(ChatColor.RED + "Banned: " + ChatColor.WHITE + set.getString("banned"));
+					p.sendMessage(ChatColor.RED + "Good at: " + ChatColor.WHITE + set.getString("goodat"));
+					p.sendMessage(ChatColor.RED + "Name: " + ChatColor.WHITE + set.getString("name"));
+					p.sendMessage(ChatColor.RED + "Age: " + ChatColor.WHITE + set.getString("age"));
+					p.sendMessage(ChatColor.RED + "Country: " + ChatColor.WHITE + set.getString("country"));
+					p.sendMessage("Accept with /apply accept Reject with /apply deny");
+					this.lookingat.put(p, set.getString("player"));
+					return true;
+				}catch(Exception e){
+					p.sendMessage("An error occured while reading the application!");
+					return true;
+				}
+			}
+			if(args[0].equalsIgnoreCase("accept")){
+				if(!this.lookingat.containsKey(p)){
+					sender.sendMessage("You have to see someone's application first. /apply");
+					return true;
+				}
+				
+			}
+			
+			
+		}
 		
 		
 		

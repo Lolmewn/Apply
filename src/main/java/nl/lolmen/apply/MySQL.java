@@ -49,7 +49,15 @@ public class MySQL {
 	}
 
 	private void setupDatabase() {
-		this.executeQuery("CREATE TABLE IF NOT EXISTS " + this.table + "(player varchar(20), skill varchar(20), xp int, level int)");
+		this.executeQuery("CREATE TABLE IF NOT EXISTS " + this.table + 
+				"(player varchar(255), " +
+				"goodat varchar(255), " +
+				"banned varchar(255), " +
+				"name varchar(255), " +
+				"age varchar(255), " +
+				"country varchar(255), " +
+				"applied tinyint, " +
+				"promoted tinyint)");
 	}
 
 	public boolean isFault() {
