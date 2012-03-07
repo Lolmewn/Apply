@@ -8,7 +8,6 @@ import java.util.logging.Logger;
 
 import nl.lolmen.apply.Applicant.todo;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -20,7 +19,7 @@ import ru.tehkode.permissions.PermissionManager;
 import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 public class Main extends JavaPlugin{
-	public Logger log = Logger.getLogger("Minecraft");
+	public Logger log;
 	public PermissionManager perm;
 	public HashMap<Player, Applicant> list = new HashMap<Player, Applicant>();
 	public HashMap<Player, String> lookingat = new HashMap<Player, String>();
@@ -32,29 +31,33 @@ public class Main extends JavaPlugin{
 	}
 
 	public void onEnable() {
+		this.log = this.getLogger();
 		new File("plugins/Apply/").mkdir();
-		new File("plugins/Apply/apps/").mkdir();
+		//new File("plugins/Apply/apps/").mkdir();
 		this.checkPerm();
 		this.set = new Settings();
-		AppListener a = new AppListener(this);
-		getServer().getPluginManager().registerEvents(new Listeners(), this);
-		getServer().getPluginManager().registerEvents(a, this);
+		this.getServer().getPluginManager().registerEvents(new Listeners(), this);
+		this.getServer().getPluginManager().registerEvents(new AppListener(this), this);
 		this.mysql = new MySQL(set.getHost(), set.getPort(), set.getUsername(), set.getPassword(), set.getDatabase(), set.getTable());
-	
 	}
 
 	private void checkPerm() {
-		Plugin test = Bukkit.getServer().getPluginManager().getPlugin("PermissionsEx");
+		Plugin test = this.getServer().getPluginManager().getPlugin("PermissionsEx");
 		if(test != null){
 			this.perm = PermissionsEx.getPermissionManager();
-			log.info("[Applications] Permissions Plugin found! (PEX)");
+			this.log.info("Permissions Plugin found! (PEX)");
 		}else{
-			log.info("[Apply] PEX not found! Disabling!");
-			getServer().getPluginManager().disablePlugin(this);
+			this.log.info("PEX not found! Disabling!");
+			this.getServer().getPluginManager().disablePlugin(this);
 		}
 	}
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String str, String[] args){
+		
+		
+		
+		
+		/*
 		if(str.equalsIgnoreCase("apply")){
 			if(sender instanceof Player){
 				final Player p = (Player)sender;
@@ -196,7 +199,7 @@ public class Main extends JavaPlugin{
 				sender.sendMessage("Huh?!? Ur not a player :O");
 				return true;
 			}
-		}
+		}*/
 		return false;
 	}
 
