@@ -39,7 +39,6 @@ public class Listeners implements Listener{
 	public void onPlayerJoin(PlayerJoinEvent event){
 		final String name = event.getPlayer().getName();
 		if(event.getPlayer().hasPermission("apply.check")){
-
 			ResultSet set = plugin.mysql.executeQuery("SELECT * FROM " + plugin.set.getTable() + " WHERE promoted=0");
 			if(set == null){
 				return;
@@ -50,7 +49,6 @@ public class Listeners implements Listener{
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-
 		}
 	}
 

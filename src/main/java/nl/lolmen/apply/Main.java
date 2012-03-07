@@ -107,16 +107,21 @@ public class Main extends JavaPlugin{
 					return true;
 				}
 				try {
-					if(set.getInt("promoted") == 1 || !this.perm.getUser(player).inGroup("")){
-						p.sendMessage("Someone else already promoted him: " + set.getString("promoter"));
+					while(set.next()){
+						if(set.getInt("promoted") == 1 || !this.perm.getUser(player).inGroup("")){
+							p.sendMessage("Someone else already promoted him: " + set.getString("promoter"));
+							return true;
+						}
+						this.mysql.executeQuery("UPDATE " + this.set.getTable() + " SET promoter='" + sender.getName() + "', promoted=1 WHERE player='" + player + "'");
+						if(!this.perm.getUser(player).inGroup("Non-Applied")){
+							sender.sendMessage("He's not in the non-applied group anymore apparently!");
+							return true;
+						}
+						this.getServer().dispatchCommand(this.getServer().getConsoleSender(), "pex promote " + player);
 						return true;
 					}
-					this.mysql.executeQuery("UPDATE " + this.set.getTable() + " SET promoter='" + sender.getName() + "', promoted=1 WHERE player='" + player + "'");
-					if(!this.perm.getUser(player).inGroup("Non-Applied")){
-						sender.sendMessage("He's not in the non-applied group anymore apparently!");
-						return true;
-					}
-					this.getServer().dispatchCommand(this.getServer().getConsoleSender(), "pex promote " + player);
+					sender.sendMessage("Well that's just weird.. " + player + " is not in the database O.o");
+					return true;
 				} catch (SQLException e) {
 					p.sendMessage("An error occured while reading the application!");
 					e.printStackTrace();
