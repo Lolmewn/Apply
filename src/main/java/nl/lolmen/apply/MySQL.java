@@ -92,7 +92,7 @@ public class MySQL {
 		try {
 			this.st = this.con.createStatement();
 			ResultSet set = this.st.executeQuery(statement);
-			this.st.close();
+			//this.st.close();
 			return set;
 		} catch (SQLException e) {
 			e.printStackTrace();
