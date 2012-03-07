@@ -49,7 +49,7 @@ public class MySQL {
 	}
 
 	private void setupDatabase() {
-		this.executeQuery("CREATE TABLE IF NOT EXISTS " + this.table + 
+		this.executeStatement("CREATE TABLE IF NOT EXISTS " + this.table + 
 				"(player varchar(255), " +
 				"goodat varchar(255), " +
 				"banned varchar(255), " +
@@ -74,7 +74,10 @@ public class MySQL {
 			return 0;
 		}
 		try {
-			return this.st.executeUpdate(statement);
+			this.st = this.con.createStatement();
+			int re = this.st.executeUpdate(statement);
+			this.st.close();
+			return re;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
