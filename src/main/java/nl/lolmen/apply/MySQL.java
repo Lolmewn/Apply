@@ -106,7 +106,6 @@ public class MySQL {
 			return;
 		}
 		try {
-			this.con.commit();
 			this.con.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
