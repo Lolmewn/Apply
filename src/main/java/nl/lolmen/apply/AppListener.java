@@ -18,17 +18,6 @@ public class AppListener implements Listener{
 	}
 	
 	@EventHandler(priority = EventPriority.NORMAL)
-	public void onPlayerJoin(final PlayerJoinEvent event){
-		if(plugin.perm.getUser(event.getPlayer()).inGroup("not-applied") && ! (plugin.perm.getUser(event.getPlayer()).inGroup("applied") || plugin.perm.getUser(event.getPlayer()).inGroup("Moderator"))){
-			Bukkit.getServer().getScheduler().scheduleAsyncDelayedTask(new Main(), new Runnable(){
-				public void run() {
-					event.getPlayer().sendMessage("You have" + ChatColor.RED + " not  + " + ChatColor.GREEN + "been applied yet! Please type "+ ChatColor.GREEN + "/apply "+ ChatColor.WHITE+ "to write your application!");
-				}
-			}, 60L);
-		}			
-	}
-	
-	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerChat(PlayerChatEvent event){
 		Player p = event.getPlayer();
 		for(Player pl: plugin.list.keySet()){

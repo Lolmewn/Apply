@@ -24,16 +24,23 @@ public class Main extends JavaPlugin{
 	public PermissionManager perm;
 	public HashMap<Player, Applicant> list = new HashMap<Player, Applicant>();
 	public HashMap<Player, String> lookingat = new HashMap<Player, String>();
+	private Settings set;
+	private MySQL mysql;
+	
 	public void onDisable() {
-		
+		this.mysql.close();
 	}
 
 	public void onEnable() {
-		checkPerm();
-		AppListener a = new AppListener(this);
-		getServer().getPluginManager().registerEvents(a, this);
 		new File("plugins/Apply/").mkdir();
 		new File("plugins/Apply/apps/").mkdir();
+		this.checkPerm();
+		this.set = new Settings();
+		AppListener a = new AppListener(this);
+		getServer().getPluginManager().registerEvents(new Listeners(), this);
+		getServer().getPluginManager().registerEvents(a, this);
+		this.mysql = new MySQL(set.getHost(), set.getPort(), set.getUsername(), set.getPassword(), set.getDatabase(), set.getTable());
+	
 	}
 
 	private void checkPerm() {
@@ -109,7 +116,7 @@ public class Main extends JavaPlugin{
 						}
 					}
 				}
-				if(perm.getUser(p).inGroup("applied") || perm.getUser(p).inGroup("owner") || perm.getUser(p).inGroup("Admins") || perm.getUser(p).inGroup("Moderator")){
+				if(p.hasPermission("apply.apply")){
 					if(perm.getUser(p).inGroup("owner") || perm.getUser(p).inGroup("Admins") || perm.getUser(p).inGroup("Moderator")){
 						File[] ar = new File("plugins/Apply/apps/").listFiles();
 						if(ar.length == 0){

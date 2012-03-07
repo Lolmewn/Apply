@@ -1,0 +1,6 @@
+dbHost: localhost
+dbPort: 3306
+dbUser: root
+dbPass: p4ssw0rd
+dbDatabase: minecraft
+dbTable: apply
