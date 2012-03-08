@@ -1,17 +1,12 @@
 package nl.lolmen.apply;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.util.Properties;
-
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 public class Applicant {
-	Player p;
-	Main plugin;
+	
+	private Player p;
+	private Main plugin;
 	
 	//The variables
 	private String goodat;
@@ -20,10 +15,12 @@ public class Applicant {
 	private String country;
 	private String age;
 	private todo next;
+	
 	//Used
 	public enum todo{
-		GOODAT, BANNED, NAME, COUNTRY, AGE, CONFIRM, DONE
+		GOODAT, BANNED, NAME, COUNTRY, AGE, CONFIRM
 	}
+	
 	String[] list = {ChatColor.RED +"Thank you" + ChatColor.WHITE + " for applying on the server!", 
 			"There are a few things we'd like to know",
 			"You can just type them in chat. " + ChatColor.RED + "No-one will see it ;)",
@@ -33,36 +30,39 @@ public class Applicant {
 			ChatColor.RED + "[3]" + ChatColor.WHITE + "Don't use bad words.",
 			ChatColor.RED + "[4]" + ChatColor.WHITE + "No flying/Hacking of any kind allowed",
 			ChatColor.RED + "[5]" + ChatColor.WHITE + "Minimap is allowed though.",
-			ChatColor.RED + "[6]" + ChatColor.WHITE + "Don't ask for MOD or Admin or OP.",
+			ChatColor.RED + "[6]" + ChatColor.WHITE + "Don't ask for MOD, Admin or OP.",
 			ChatColor.RED + "/rules" + ChatColor.WHITE + " gives a short description",
 			ChatColor.RED +"Thank you " + ChatColor.WHITE + "for applying! A Moderator or Admin will now look at it"};
 	public Applicant(Main m, Player p){
 		this.p = p;
-		plugin = m;
+		this.plugin = m;
+		this.start();
 	}
+	
 	public void start() {
-		for(Player p:plugin.getServer().getOnlinePlayers()){
-			if(plugin.perm.getUser(p).inGroup("owner") || plugin.perm.getUser(p).inGroup("Moderator") || plugin.perm.getUser(p).inGroup("Admins")){
-				p.sendMessage(ChatColor.RED  + this.p.getName() + ChatColor.WHITE + " started the  " + ChatColor.GREEN + "application process.");
+		for(Player p: this.plugin.getServer().getOnlinePlayers()){
+			if(p.hasPermission("apply.check")){
+				p.sendMessage(ChatColor.RED + this.p.getName() + " has started the application");
 			}
 		}
 		for(int i = 0; i < list.length; i++){
 			final int done = i;
 			int time = i*40 + 5;
-			Bukkit.getScheduler().scheduleAsyncDelayedTask(plugin, new Runnable(){
+			this.plugin.getServer().getScheduler().scheduleAsyncDelayedTask(this.plugin, new Runnable(){
 				public void run() {
 					p.sendMessage(list[done]);
 				}
 			}, time);
 		}
 		setNext(todo.GOODAT);
+		this.plugin.getMySQL().executeQuery("INSERT INTO " + this.plugin.getSettings().getTable() + " (player) values ('" + p.getName() + "')");
 	}
 	
 	public void sendRules(){
 		for(int i = 0; i < rules.length; i++){
 			final int done = i;
 			int time = i*40 + 30;
-			Bukkit.getScheduler().scheduleAsyncDelayedTask(plugin, new Runnable(){
+			this.plugin.getServer().getScheduler().scheduleAsyncDelayedTask(this.plugin, new Runnable(){
 				public void run() {
 					p.sendMessage(rules[done]);
 				}
@@ -76,41 +76,55 @@ public class Applicant {
 	}
 	public void setGoodat(String goodat) {
 		this.goodat = goodat;
+		this.plugin.getMySQL().executeQuery("INSERT INTO " + this.plugin.getSettings().getTable() + " (goodat) values ('" + goodat + "') WHERE player='" + this.p.getName() + "'");
 	}
 	public String getBanned() {
 		return banned;
 	}
 	public void setBanned(String banned) {
+		this.plugin.getMySQL().executeQuery("INSERT INTO " + this.plugin.getSettings().getTable() + " (goodat) values ('" + goodat + "') WHERE player='" + this.p.getName() + "'");
 		this.banned = banned;
 	}
 	public String getName() {
 		return name;
 	}
 	public void setName(String name) {
+		this.plugin.getMySQL().executeQuery("INSERT INTO " + this.plugin.getSettings().getTable() + " (goodat) values ('" + goodat + "') WHERE player='" + this.p.getName() + "'");
 		this.name = name;
 	}
 	public String getCountry() {
 		return country;
 	}
 	public void setCountry(String country) {
+		this.plugin.getMySQL().executeQuery("INSERT INTO " + this.plugin.getSettings().getTable() + " (goodat) values ('" + goodat + "') WHERE player='" + this.p.getName() + "'");
 		this.country = country;
 	}
 	public String getAge() {
 		return age;
 	}
 	public void setAge(String age) {
+		this.plugin.getMySQL().executeQuery("INSERT INTO " + this.plugin.getSettings().getTable() + " (goodat) values ('" + goodat + "') WHERE player='" + this.p.getName() + "'");
 		this.age = age;
 	}
 	public todo getNext() {
 		return next;
 	}
 	public void setNext(todo next) {
+		this.plugin.getMySQL().executeQuery("INSERT INTO " + this.plugin.getSettings().getTable() + " (goodat) values ('" + goodat + "') WHERE player='" + this.p.getName() + "'");
 		this.next = next;
 	}
 	public void save() {
-		/**plugin.sql.query("INSERT INTO Applications (player, goodat, banned, name, age, country) VALUES ('"+ p.getName() + "', '" + getGoodat() + "', '" + getBanned() + "', '" + getName() + "', '" + getAge() + "', '" + getCountry() + "');");
-		*/
-		File f = new File("plugins/Apply/apps/" + p.getName() + ".txt");
+		this.plugin.getMySQL().executeQuery("INSERT INTO Applications " +
+				"(player, goodat, banned, name, age, country, promoted) VALUES ('"+ 
+				p.getName() + "', '" + 
+				getGoodat() + "', '" + 
+				getBanned() + "', '" + 
+				getName() + "', '" + 
+				getAge() + "', '" + 
+				getCountry() + "'," +
+				"0)");
+		/*
+		File f = new File("this.plugins/Apply/apps/" + p.getName() + ".txt");
 		try{
 			f.createNewFile();
 			Properties prop = new Properties();
@@ -129,9 +143,9 @@ public class Applicant {
 			out.close();
 		}catch(Exception e){
 			e.printStackTrace();
-		}
-		for(Player p:plugin.getServer().getOnlinePlayers()){
-			if(plugin.perm.getUser(p).inGroup("owner") || plugin.perm.getUser(p).inGroup("Moderator") || plugin.perm.getUser(p).inGroup("Admins")){
+		}*/
+		for(Player p: this.plugin.getServer().getOnlinePlayers()){
+			if(p.hasPermission("apply.check")){
 				p.sendMessage(ChatColor.RED  + this.p.getName() + ChatColor.WHITE + " finished the  " + ChatColor.GREEN + "application process.");
 			}
 		}

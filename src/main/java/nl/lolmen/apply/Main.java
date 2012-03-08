@@ -4,7 +4,6 @@ import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
@@ -19,11 +18,11 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 public class Main extends JavaPlugin{
 	public Logger log;
-	public PermissionManager perm;
+	private PermissionManager perm;
 	public HashMap<Player, Applicant> list = new HashMap<Player, Applicant>();
-	public HashMap<Player, String> lookingat = new HashMap<Player, String>();
-	protected Settings set;
-	protected MySQL mysql;
+	private HashMap<Player, String> lookingat = new HashMap<Player, String>();
+	private Settings set;
+	private MySQL mysql;
 
 	public void onDisable() {
 		this.mysql.close();
@@ -36,7 +35,6 @@ public class Main extends JavaPlugin{
 		this.checkPerm();
 		this.set = new Settings();
 		this.getServer().getPluginManager().registerEvents(new Listeners(this), this);
-		this.getServer().getPluginManager().registerEvents(new AppListener(this), this);
 		this.mysql = new MySQL(
 				this.set.getHost(), 
 				this.set.getPort(), 
@@ -44,6 +42,14 @@ public class Main extends JavaPlugin{
 				this.set.getPassword(), 
 				this.set.getDatabase(), 
 				this.set.getTable());
+	}
+	
+	protected MySQL getMySQL(){
+		return this.mysql;
+	}
+	
+	protected Settings getSettings(){
+		return this.set;
 	}
 
 	private void checkPerm() {
@@ -204,10 +210,11 @@ public class Main extends JavaPlugin{
 					return true;
 				}
 			}
-
-
+			sender.sendMessage("Unknown Apply command: /apply " + args[0]);
+			return true;
 		}
-
+		//It's a normal player doing the command
+		
 
 
 		/*

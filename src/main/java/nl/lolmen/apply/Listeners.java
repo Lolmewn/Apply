@@ -3,14 +3,18 @@ package nl.lolmen.apply;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.bukkit.Bukkit;
+import nl.lolmen.apply.Applicant.todo;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Sign;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
@@ -43,13 +47,13 @@ public class Listeners implements Listener{
 	public void onPlayerJoin(PlayerJoinEvent event){
 		if(event.getPlayer().hasPermission("apply.check")){
 			final String name = event.getPlayer().getName();
-			ResultSet set = plugin.mysql.executeQuery("SELECT * FROM " + plugin.set.getTable() + " WHERE promoted=0");
+			ResultSet set = this.getMySQL().executeQuery("SELECT * FROM " + this.getTable() + " WHERE promoted=0");
 			if(set == null){
 				return;
 			}
 			try {
 				set.last();
-				Bukkit.getPlayer(name).sendMessage("There are " + set.getRow() + " applications waiting!");
+				this.getPlugin().getServer().getPlayer(name).sendMessage("There are " + set.getRow() + " applications waiting!");
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -57,7 +61,7 @@ public class Listeners implements Listener{
 	}
 	
 	private MySQL getMySQL(){
-		return this.getPlugin().mysql;
+		return this.getPlugin().getMySQL();
 	}
 	
 	private Main getPlugin(){
@@ -65,7 +69,7 @@ public class Listeners implements Listener{
 	}
 	
 	private String getTable(){
-		return this.getPlugin().set.getTable();
+		return this.getPlugin().getSettings().getTable();
 	}
 	
 	public void onPlayerInteract(PlayerInteractEvent event){
@@ -105,8 +109,66 @@ public class Listeners implements Listener{
 						return;
 					}
 				}
+				//Doesn't contain his name, didn't start yet.
+				this.getPlugin().list.put(event.getPlayer(), new Applicant(this.getPlugin(), event.getPlayer()));
 			} catch (SQLException e) {
 				e.printStackTrace();
+			}
+		}
+	}
+	
+	
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onPlayerChat(PlayerChatEvent event){
+		Player p = event.getPlayer();
+		for(Player pl: this.getPlugin().list.keySet()){
+			event.getRecipients().remove(pl);
+		}
+		if(this.getPlugin().list.containsKey(p)){
+			event.setCancelled(true);
+			Applicant c = this.getPlugin().list.get(p);
+			todo t = c.getNext();
+			switch (t) {
+			case GOODAT:
+				c.setGoodat(event.getMessage());
+				c.setNext(todo.BANNED);
+				p.sendMessage("");
+				p.sendMessage(ChatColor.RED +"All right. " + ChatColor.WHITE + "Next question: Have you ever been" +ChatColor.RED + " banned" + ChatColor.WHITE +" before?");
+				p.sendMessage("And if yes, " + ChatColor.RED +  "why?");
+				return;
+			case BANNED:
+				c.setBanned(event.getMessage());
+				c.setNext(todo.NAME);
+				p.sendMessage("");
+				p.sendMessage("Okay. We're almost done! The last 3 questions " + ChatColor.RED +  "don't have to be true.");
+				p.sendMessage("What is your " + ChatColor.RED + "first name?");
+				return;
+			case NAME:
+				c.setName(event.getMessage());
+				c.setNext(todo.AGE);
+				p.sendMessage("");
+				p.sendMessage("Alright, " + ChatColor.RED +  "almost done!");
+				p.sendMessage("How " + ChatColor.RED +  "old" + ChatColor.WHITE+" are you?");
+				return;
+			case AGE:
+				c.setAge(event.getMessage());
+				c.setNext(todo.COUNTRY);
+				p.sendMessage("");
+				p.sendMessage(ChatColor.GREEN + "Last question!");
+				p.sendMessage("In what " + ChatColor.RED +  "country" + ChatColor.WHITE +" do you live?");
+				return;
+			case COUNTRY:
+				c.setCountry(event.getMessage());
+				c.setNext(todo.CONFIRM);
+				p.sendMessage("");
+				p.sendMessage("Okay, that were all the questions! Could you look if this is alright?");
+				p.sendMessage("Good at: " + ChatColor.RED + c.getGoodat());
+				p.sendMessage("Banned: " + ChatColor.RED + c.getBanned());
+				p.sendMessage("Name: " + ChatColor.RED + c.getName());
+				p.sendMessage("Age: " + ChatColor.RED + c.getAge());
+				p.sendMessage("Country: " + ChatColor.RED + c.getCountry());
+				p.sendMessage("If this is alright, type " +ChatColor.RED + "/apply " + ChatColor.WHITE + "To confirm! Otherwise, type " + ChatColor.RED + "/apply reset");
+				return;
 			}
 		}
 	}
