@@ -89,6 +89,10 @@ public class MySQL {
 			System.out.println("[Apply] Can't execute query, something wrong with connection");
 			return null;
 		}
+		if(statement.toLowerCase().startsWith("update") || statement.toLowerCase().startsWith("insert") || statement.toLowerCase().startsWith("delete")){
+			this.executeStatement(statement);
+			return null;
+		}
 		try {
 			this.st = this.con.createStatement();
 			ResultSet set = this.st.executeQuery(statement);
