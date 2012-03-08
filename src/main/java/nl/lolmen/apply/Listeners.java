@@ -104,11 +104,15 @@ public class Listeners implements Listener{
 						if(event.getPlayer().hasPermission("apply.check")){
 							this.getPlugin().getServer().dispatchCommand(this.getPlugin().getServer().getConsoleSender(), "apply");
 						}else{
-							event.getPlayer().sendMessage("You've already been promoted, by " + set.getString("promoter"));
+							event.getPlayer().sendMessage("You've already been promoted, by " + (set.getString("promoter").equals(null) ? "No-one? eeh.. okay." : set.getString("promoter")));
 						}
 						return;
 					}else{
 						if(set.getString("country")!= null){
+							if(this.getPlugin().list.containsKey(event.getPlayer().getName())){
+								event.getPlayer().sendMessage("Please confirm your application: /apply");
+								return;
+							}
 							event.getPlayer().sendMessage("A moderator will look at your application soon!");
 						}else{
 							event.getPlayer().sendMessage("You have to finish the application first!");
@@ -117,7 +121,7 @@ public class Listeners implements Listener{
 					}
 				}
 				//Doesn't contain his name, didn't start yet.
-				this.getPlugin().list.put(event.getPlayer(), new Applicant(this.getPlugin(), event.getPlayer()));
+				this.getPlugin().list.put(event.getPlayer().getName(), new Applicant(this.getPlugin(), event.getPlayer()));
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -128,12 +132,12 @@ public class Listeners implements Listener{
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerChat(PlayerChatEvent event){
 		Player p = event.getPlayer();
-		for(Player pl: this.getPlugin().list.keySet()){
-			event.getRecipients().remove(pl);
+		for(String pl: this.getPlugin().list.keySet()){
+			event.getRecipients().remove(this.getPlugin().getServer().getPlayer(pl));
 		}
-		if(this.getPlugin().list.containsKey(p)){
+		if(this.getPlugin().list.containsKey(p.getName())){
 			event.setCancelled(true);
-			Applicant c = this.getPlugin().list.get(p);
+			Applicant c = this.getPlugin().list.get(p.getName());
 			todo t = c.getNext();
 			switch (t) {
 			case GOODAT:

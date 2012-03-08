@@ -19,7 +19,7 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
 public class Main extends JavaPlugin{
 	public Logger log;
 	private PermissionManager perm;
-	public HashMap<Player, Applicant> list = new HashMap<Player, Applicant>();
+	public HashMap<String, Applicant> list = new HashMap<String, Applicant>();
 	private HashMap<Player, String> lookingat = new HashMap<Player, String>();
 	private Settings set;
 	private MySQL mysql;
@@ -83,6 +83,10 @@ public class Main extends JavaPlugin{
 				}
 				try{
 					while(set.next()){
+						if(this.list.containsKey(set.getString("player"))){
+							//is still busy
+							continue;
+						}
 						p.sendMessage(ChatColor.RED + "IGN: " + ChatColor.WHITE + set.getString("player"));
 						p.sendMessage(ChatColor.RED + "Banned: " + ChatColor.WHITE + set.getString("banned"));
 						p.sendMessage(ChatColor.RED + "Good at: " + ChatColor.WHITE + set.getString("goodat"));
