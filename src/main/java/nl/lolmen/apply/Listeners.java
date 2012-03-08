@@ -72,6 +72,7 @@ public class Listeners implements Listener{
 		return this.getPlugin().getSettings().getTable();
 	}
 	
+	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event){
 		if(event.isCancelled()){
 			return;
