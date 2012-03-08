@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
+import nl.lolmen.apply.Applicant.todo;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -220,6 +222,44 @@ public class Main extends JavaPlugin{
 				this.list.remove(sender.getName());
 				return true;
 			}
+			//check if he already applied
+			ResultSet set = this.getMySQL().executeQuery("SELECT * FROM " + this.getSettings().getTable() + " WHERE player='" + sender.getName() + "' LIMIT 1");
+			if(set == null){
+				sender.sendMessage("The query is null, sorry!");
+				return true;
+			}
+			try {
+				while(set.next()){
+					if(set.getInt("promoted") == 1){
+						//Already promoted
+						sender.sendMessage("You've already applied, and have been promoted by " + (set.getString("promoter").equals(null) ? "no-one" : set.getString("promoter")));
+						return true;
+					}
+					sender.sendMessage("To apply, find a [Apply] sign!");
+					return true;
+				}
+				if(this.perm.getUser(sender.getName()).inGroup("Non-Applied")){
+					sender.sendMessage("To apply, find a [Apply] sign!");
+					return true;
+				}
+				sender.sendMessage("You've already been promoted, but we've got no clue how :O");
+				return true;
+			} catch (SQLException e) {
+				e.printStackTrace();
+				sender.sendMessage("Something went terribly wrong while reading the data!");
+				return true;
+			}
+		}
+		if(args[0].equalsIgnoreCase("reject")){
+			if(this.list.containsKey(sender.getName())){
+				sender.sendMessage("We've reset your application, you can now try again!");
+				Applicant c = this.list.get(sender.getName());
+				c.setNext(todo.GOODAT);
+				sender.sendMessage("So, what are you good at?");
+				return true;
+			}
+			sender.sendMessage("What's there to reject?");
+			return true;
 		}
 
 
