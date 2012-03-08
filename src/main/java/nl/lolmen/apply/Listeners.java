@@ -46,14 +46,20 @@ public class Listeners implements Listener{
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event){
 		if(event.getPlayer().hasPermission("apply.check")){
-			final String name = event.getPlayer().getName();
 			ResultSet set = this.getMySQL().executeQuery("SELECT * FROM " + this.getTable() + " WHERE promoted=0");
 			if(set == null){
 				return;
 			}
 			try {
 				set.last();
-				this.getPlugin().getServer().getPlayer(name).sendMessage("There are " + set.getRow() + " applications waiting!");
+				if(set.getRow() == 0){
+					return;
+				}
+				if(set.getRow() == 1){
+					event.getPlayer().sendMessage("There is 1 application waiting!");
+					return;
+				}
+				event.getPlayer().sendMessage("There are " + set.getRow() + " applications waiting!");
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
