@@ -129,6 +129,7 @@ public class Main extends JavaPlugin{
 							return true;
 						}
 						prom.sendMessage(ChatColor.RED + "You have been promoted by " + ChatColor.GREEN + sender.getName() + "!");
+						this.lookingat.remove(sender.getName());
 						return true;
 					}
 					sender.sendMessage("Well that's just weird.. " + player + " is not in the database O.o");
@@ -166,6 +167,7 @@ public class Main extends JavaPlugin{
 							return true;
 						}
 						prom.sendMessage(ChatColor.RED + "Your application has been rejected, please apply again!");
+						this.lookingat.remove(sender.getName());
 						return true;
 					}
 					sender.sendMessage("Well that's just weird.. " + player + " is not in the database O.o");
