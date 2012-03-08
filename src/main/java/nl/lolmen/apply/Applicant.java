@@ -76,34 +76,34 @@ public class Applicant {
 	}
 	public void setGoodat(String goodat) {
 		this.goodat = goodat;
-		this.plugin.getMySQL().executeQuery("INSERT INTO " + this.plugin.getSettings().getTable() + " (goodat) values ('" + goodat + "') WHERE player='" + this.p.getName() + "'");
+		this.plugin.getMySQL().executeQuery("UPDATE " + this.plugin.getSettings().getTable() + " SET goodat='" + goodat + "' WHERE player='" + this.p.getName() + "'");
 	}
 	public String getBanned() {
 		return banned;
 	}
 	public void setBanned(String banned) {
-		this.plugin.getMySQL().executeQuery("INSERT INTO " + this.plugin.getSettings().getTable() + " (banned) values ('" + banned + "') WHERE player='" + this.p.getName() + "'");
+		this.plugin.getMySQL().executeQuery("UPDATE " + this.plugin.getSettings().getTable() + " SET banned='" + banned + "' WHERE player='" + this.p.getName() + "'");
 		this.banned = banned;
 	}
 	public String getName() {
 		return name;
 	}
 	public void setName(String name) {
-		this.plugin.getMySQL().executeQuery("INSERT INTO " + this.plugin.getSettings().getTable() + " (name) values ('" + name + "') WHERE player='" + this.p.getName() + "'");
+		this.plugin.getMySQL().executeQuery("UPDATE " + this.plugin.getSettings().getTable() + " SET name='" + name + "' WHERE player='" + this.p.getName() + "'");
 		this.name = name;
 	}
 	public String getCountry() {
 		return country;
 	}
 	public void setCountry(String country) {
-		this.plugin.getMySQL().executeQuery("INSERT INTO " + this.plugin.getSettings().getTable() + " (country) values ('" + country + "') WHERE player='" + this.p.getName() + "'");
+		this.plugin.getMySQL().executeQuery("UPDATE " + this.plugin.getSettings().getTable() + " SET country='" + country + "' WHERE player='" + this.p.getName() + "'");
 		this.country = country;
 	}
 	public String getAge() {
 		return age;
 	}
 	public void setAge(String age) {
-		this.plugin.getMySQL().executeQuery("INSERT INTO " + this.plugin.getSettings().getTable() + " (age) values ('" + age + "') WHERE player='" + this.p.getName() + "'");
+		this.plugin.getMySQL().executeQuery("UPDATE " + this.plugin.getSettings().getTable() + " SET age='" + age + "' WHERE player='" + this.p.getName() + "'");
 		this.age = age;
 	}
 	public todo getNext() {
@@ -113,6 +113,7 @@ public class Applicant {
 		this.next = next;
 	}
 	public void save() {
+		/*
 		this.plugin.getMySQL().executeQuery("INSERT INTO Applications " +
 				"(player, goodat, banned, name, age, country, promoted) VALUES ('"+ 
 				p.getName() + "', '" + 
