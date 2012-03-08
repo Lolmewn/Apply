@@ -82,35 +82,34 @@ public class Applicant {
 		return banned;
 	}
 	public void setBanned(String banned) {
-		this.plugin.getMySQL().executeQuery("INSERT INTO " + this.plugin.getSettings().getTable() + " (goodat) values ('" + goodat + "') WHERE player='" + this.p.getName() + "'");
+		this.plugin.getMySQL().executeQuery("INSERT INTO " + this.plugin.getSettings().getTable() + " (banned) values ('" + banned + "') WHERE player='" + this.p.getName() + "'");
 		this.banned = banned;
 	}
 	public String getName() {
 		return name;
 	}
 	public void setName(String name) {
-		this.plugin.getMySQL().executeQuery("INSERT INTO " + this.plugin.getSettings().getTable() + " (goodat) values ('" + goodat + "') WHERE player='" + this.p.getName() + "'");
+		this.plugin.getMySQL().executeQuery("INSERT INTO " + this.plugin.getSettings().getTable() + " (name) values ('" + name + "') WHERE player='" + this.p.getName() + "'");
 		this.name = name;
 	}
 	public String getCountry() {
 		return country;
 	}
 	public void setCountry(String country) {
-		this.plugin.getMySQL().executeQuery("INSERT INTO " + this.plugin.getSettings().getTable() + " (goodat) values ('" + goodat + "') WHERE player='" + this.p.getName() + "'");
+		this.plugin.getMySQL().executeQuery("INSERT INTO " + this.plugin.getSettings().getTable() + " (country) values ('" + country + "') WHERE player='" + this.p.getName() + "'");
 		this.country = country;
 	}
 	public String getAge() {
 		return age;
 	}
 	public void setAge(String age) {
-		this.plugin.getMySQL().executeQuery("INSERT INTO " + this.plugin.getSettings().getTable() + " (goodat) values ('" + goodat + "') WHERE player='" + this.p.getName() + "'");
+		this.plugin.getMySQL().executeQuery("INSERT INTO " + this.plugin.getSettings().getTable() + " (age) values ('" + age + "') WHERE player='" + this.p.getName() + "'");
 		this.age = age;
 	}
 	public todo getNext() {
 		return next;
 	}
 	public void setNext(todo next) {
-		this.plugin.getMySQL().executeQuery("INSERT INTO " + this.plugin.getSettings().getTable() + " (goodat) values ('" + goodat + "') WHERE player='" + this.p.getName() + "'");
 		this.next = next;
 	}
 	public void save() {
