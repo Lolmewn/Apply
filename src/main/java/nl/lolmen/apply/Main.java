@@ -24,7 +24,7 @@ public class Main extends JavaPlugin{
 	public HashMap<Player, String> lookingat = new HashMap<Player, String>();
 	protected Settings set;
 	protected MySQL mysql;
-	
+
 	public void onDisable() {
 		this.mysql.close();
 	}
@@ -56,7 +56,7 @@ public class Main extends JavaPlugin{
 			this.getServer().getPluginManager().disablePlugin(this);
 		}
 	}
-	
+
 	public boolean onCommand(CommandSender sender, Command cmd, String str, String[] args){
 		if(!cmd.getName().equalsIgnoreCase("apply")){
 			return false;
@@ -108,7 +108,7 @@ public class Main extends JavaPlugin{
 				}
 				try {
 					while(set.next()){
-						if(set.getInt("promoted") == 1 || !this.perm.getUser(player).inGroup("")){
+						if(set.getInt("promoted") == 1 || !this.perm.getUser(player).inGroup("Non-Applied")){
 							p.sendMessage("Someone else already promoted him: " + set.getString("promoter"));
 							return true;
 						}
@@ -118,6 +118,11 @@ public class Main extends JavaPlugin{
 							return true;
 						}
 						this.getServer().dispatchCommand(this.getServer().getConsoleSender(), "pex promote " + player);
+						Player prom = this.getServer().getPlayer(player);
+						if(prom == null || !prom.isOnline()){
+							return true;
+						}
+						prom.sendMessage(ChatColor.RED + "You have been promoted by " + ChatColor.GREEN + sender.getName() + "!");
 						return true;
 					}
 					sender.sendMessage("Well that's just weird.. " + player + " is not in the database O.o");
@@ -127,14 +132,84 @@ public class Main extends JavaPlugin{
 					e.printStackTrace();
 					return true;
 				}
-				
 			}
-			
-			
+			if(args[0].equalsIgnoreCase("deny") || args[0].equalsIgnoreCase("reject")){
+				if(!this.lookingat.containsKey(p)){
+					sender.sendMessage("You have to see someone's application first. /apply");
+					return true;
+				}
+				String player = this.lookingat.get(p);
+				ResultSet set = this.mysql.executeQuery("SELECT * FROM " + this.set.getTable() + " WHERE player='" + player + "'");
+				if(set == null){
+					sender.sendMessage("Well that's just weird.. " + player + " is not in the database O.o");
+					return true;
+				}
+				try {
+					while(set.next()){
+						if(set.getInt("promoted") == 1 || !this.perm.getUser(player).inGroup("Non-Applied")){
+							p.sendMessage("Someone else already promoted him: " + set.getString("promoter"));
+							return true;
+						}
+						this.mysql.executeQuery("DELETE FROM " + this.set.getTable() + " WHERE player='" + player + "'");
+						if(!this.perm.getUser(player).inGroup("Non-Applied")){
+							sender.sendMessage("He's not in the non-applied group anymore apparently!");
+							return true;
+						}
+						Player prom = this.getServer().getPlayer(player);
+						if(prom == null || !prom.isOnline()){
+							return true;
+						}
+						prom.sendMessage(ChatColor.RED + "Your application has been rejected, please apply again!");
+						return true;
+					}
+					sender.sendMessage("Well that's just weird.. " + player + " is not in the database O.o");
+					return true;
+				} catch (SQLException e) {
+					p.sendMessage("An error occured while reading the application!");
+					e.printStackTrace();
+					return true;
+				}
+			}
+			if(args[0].equalsIgnoreCase("lookup")){
+				if(args.length == 1){
+					sender.sendMessage("ERR: args. Correct usage: /apply lookup <player>");
+					return true;
+				}
+				String player = args[1];
+				if(this.getServer().getPlayer(player)!=null){
+					player = this.getServer().getPlayer(player).getName();
+				}
+				ResultSet set = this.mysql.executeQuery("SELECT * FROM " + this.set.getTable() + " WHERE player='" + player + "' LIMIT 1");
+				if(set == null){
+					sender.sendMessage("This query returned null, sorry!");
+					return true;
+				}
+				try {
+					while(set.next()){
+						p.sendMessage(ChatColor.RED + "IGN: " + ChatColor.WHITE + set.getString("player"));
+						p.sendMessage(ChatColor.RED + "Banned: " + ChatColor.WHITE + set.getString("banned"));
+						p.sendMessage(ChatColor.RED + "Good at: " + ChatColor.WHITE + set.getString("goodat"));
+						p.sendMessage(ChatColor.RED + "Name: " + ChatColor.WHITE + set.getString("name"));
+						p.sendMessage(ChatColor.RED + "Age: " + ChatColor.WHITE + set.getString("age"));
+						p.sendMessage(ChatColor.RED + "Country: " + ChatColor.WHITE + set.getString("country"));
+						p.sendMessage(ChatColor.RED + "Promoted: " + ChatColor.WHITE + (set.getInt("promoted") == 0 ? "false" : "true"));
+						p.sendMessage(ChatColor.RED + "Promoter: " + ChatColor.WHITE + (set.getString("promoter").equals(null) ? "no-one" : set.getString("promoter")));
+						return true;
+					}
+					sender.sendMessage("Player " + player + " apparently isn't in the database!");
+					return true;
+				} catch (SQLException e) {
+					e.printStackTrace();
+					p.sendMessage("An error occured while reading the application!");
+					return true;
+				}
+			}
+
+
 		}
-		
-		
-		
+
+
+
 		/*
 		if(str.equalsIgnoreCase("apply")){
 			if(sender instanceof Player){
@@ -224,7 +299,7 @@ public class Main extends JavaPlugin{
 							p.sendMessage("File Error.");
 							return true;
 						}
-						
+
 					}
 					p.sendMessage("Why would you want to apply " + ChatColor.RED + "again?");
 					return true;
@@ -263,7 +338,7 @@ public class Main extends JavaPlugin{
 					}
 				}
 				//Check if already applied, but not yet made Citizen
-				
+
 				if(new File("plugins/Apply/apps/" + ((Player)sender).getName() + ".txt").exists()){
 					p.sendMessage(ChatColor.RED + "You already applied! " + ChatColor.WHITE + " A Moderator will look at it soon.");
 					return true;

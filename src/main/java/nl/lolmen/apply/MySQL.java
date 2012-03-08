@@ -56,7 +56,7 @@ public class MySQL {
 				"name varchar(255), " +
 				"age varchar(255), " +
 				"country varchar(255), " +
-				"promoted tinyint, " +
+				"promoted tinyint DEFAULT 0, " +
 				"promoter varchar(255))");
 	}
 
@@ -69,7 +69,7 @@ public class MySQL {
 	}
 	
 	public int executeStatement(String statement){
-		if(fault){
+		if(isFault()){
 			System.out.println("[Apply] Can't execute statement, something wrong with connection");
 			return 0;
 		}
@@ -85,7 +85,7 @@ public class MySQL {
 	}
 	
 	public ResultSet executeQuery(String statement){
-		if(fault){
+		if(isFault()){
 			System.out.println("[Apply] Can't execute query, something wrong with connection");
 			return null;
 		}
@@ -101,7 +101,7 @@ public class MySQL {
 	}
 	
 	public void close(){
-		if(fault){
+		if(isFault()){
 			System.out.println("[Apply] Can't close connection, something wrong with it");
 			return;
 		}
