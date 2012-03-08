@@ -114,7 +114,7 @@ public class Main extends JavaPlugin{
 				}
 				try {
 					while(set.next()){
-						if(set.getInt("promoted") == 1 || !this.perm.getUser(player).inGroup("Non-Applied")){
+						if(set.getInt("promoted") == 1){
 							p.sendMessage("Someone else already promoted him: " + set.getString("promoter"));
 							return true;
 						}
@@ -123,7 +123,7 @@ public class Main extends JavaPlugin{
 							sender.sendMessage("He's not in the non-applied group anymore apparently!");
 							return true;
 						}
-						this.getServer().dispatchCommand(this.getServer().getConsoleSender(), "pex promote " + player);
+						this.getServer().dispatchCommand(this.getServer().getConsoleSender(), "pex promote " + player + " Main");
 						Player prom = this.getServer().getPlayer(player);
 						if(prom == null || !prom.isOnline()){
 							return true;
