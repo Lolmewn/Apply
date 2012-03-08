@@ -170,7 +170,6 @@ public class Listeners implements Listener{
 				return;
 			case COUNTRY:
 				c.setCountry(event.getMessage());
-				c.setNext(todo.CONFIRM);
 				p.sendMessage("");
 				p.sendMessage("Okay, that were all the questions! Could you look if this is alright?");
 				p.sendMessage("Good at: " + ChatColor.RED + c.getGoodat());

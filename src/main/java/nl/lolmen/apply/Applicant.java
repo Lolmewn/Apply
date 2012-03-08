@@ -18,7 +18,7 @@ public class Applicant {
 	
 	//Used
 	public enum todo{
-		GOODAT, BANNED, NAME, COUNTRY, AGE, CONFIRM
+		GOODAT, BANNED, NAME, COUNTRY, AGE
 	}
 	
 	String[] list = {ChatColor.RED +"Thank you" + ChatColor.WHITE + " for applying on the server!", 
@@ -68,7 +68,6 @@ public class Applicant {
 				}
 			}, time);
 		}
-		setNext(todo.CONFIRM);
 	}
 	
 	public String getGoodat() {

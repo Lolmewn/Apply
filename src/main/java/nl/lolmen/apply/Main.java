@@ -218,7 +218,15 @@ public class Main extends JavaPlugin{
 			return true;
 		}
 		//It's a normal player doing the command
-		
+		if(args.length == 0){
+			if(this.list.containsKey(sender.getName())){
+				//Confirms the data
+				sender.sendMessage("Last thing you need to know: the rules.");
+				this.list.get(sender.getName()).sendRules();
+				this.list.remove(sender.getName());
+				return true;
+			}
+		}
 
 
 		/*
