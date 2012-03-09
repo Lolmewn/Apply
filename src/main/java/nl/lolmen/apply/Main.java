@@ -201,7 +201,7 @@ public class Main extends JavaPlugin{
 						sender.sendMessage(ChatColor.RED + "Age: " + ChatColor.WHITE + set.getString("age"));
 						sender.sendMessage(ChatColor.RED + "Country: " + ChatColor.WHITE + set.getString("country"));
 						sender.sendMessage(ChatColor.RED + "Promoted: " + ChatColor.WHITE + (set.getInt("promoted") == 0 ? "false" : "true"));
-						sender.sendMessage(ChatColor.RED + "Promoter: " + ChatColor.WHITE + (set.getString("promoter").equals(null) ? "no-one" : set.getString("promoter")));
+						sender.sendMessage(ChatColor.RED + "Promoter: " + ChatColor.WHITE + (set.getString("promoter") == null ? "no-one" : set.getString("promoter")));
 						return true;
 					}
 					sender.sendMessage("Player " + player + " apparently isn't in the database!");
