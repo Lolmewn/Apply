@@ -1,0 +1,8 @@
+name: Apply
+version: 1.0
+main: nl.lolmen.apply.Main
+author: Lolmewn
+commands:
+  apply:
+    usage: /<command>
+    description: Apply now!
