@@ -254,7 +254,7 @@ public class Main extends JavaPlugin {
                 return true;
             }
         }
-        if (args[0].equalsIgnoreCase("reject")) {
+        if (args[0].equalsIgnoreCase("reject") || args[0].equalsIgnoreCase("reset")) {
             if (this.list.containsKey(sender.getName())) {
                 sender.sendMessage("We've reset your application, you can now try again!");
                 Applicant c = this.list.get(sender.getName());

@@ -1,10 +1,6 @@
 package nl.lolmen.apply;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class MySQL {
 
@@ -66,8 +62,8 @@ public class MySQL {
         this.fault = fault;
     }
 
-    public int executeStatement(String statement) {
-        statement = statement.replace("'", "\'");
+    public int executeStatement(String statemen) {
+        String statement = statemen.replace("\'", "\\\'");
         if (isFault()) {
             System.out.println("[Apply] Can't execute statement, something wrong with connection");
             return 0;
@@ -83,8 +79,8 @@ public class MySQL {
         return 0;
     }
 
-    public ResultSet executeQuery(String statement) {
-        statement = statement.replace("'", "\'");
+    public ResultSet executeQuery(String statemen) {
+        String statement = statemen.replace("'", "\'");
         if (isFault()) {
             System.out.println("[Apply] Can't execute query, something wrong with connection");
             return null;
