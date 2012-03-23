@@ -51,7 +51,7 @@ public class MySQL {
                 + "age varchar(255), "
                 + "country varchar(255), "
                 + "promoted tinyint DEFAULT 0, "
-                + "promoter varchar(255))");
+                + "promoter varchar(255), promotedTime TIMESTAMP)");
     }
 
     public boolean isFault() {

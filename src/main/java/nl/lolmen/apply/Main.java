@@ -3,6 +3,8 @@ package nl.lolmen.apply;
 import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
@@ -120,7 +122,11 @@ public class Main extends JavaPlugin {
                             sender.sendMessage("Someone else already promoted him: " + resSet.getString("promoter"));
                             return true;
                         }
-                        this.mysql.executeQuery("UPDATE " + this.set.getTable() + " SET promoter='" + sender.getName() + "', promoted=1 WHERE player='" + player + "'");
+                        this.mysql.executeQuery("UPDATE " + this.set.getTable() + " SET "
+                                + "promoter='" + sender.getName() + "', "
+                                + "promoted=1, "
+                                + "promotedTime='" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.fffffffff").format(Calendar.getInstance().getTime()) + "' "
+                                + "WHERE player='" + player + "'");
                         if (!this.perm.getUser(player).inGroup("Non-Applied")) {
                             sender.sendMessage("He's not in the non-applied group anymore apparently!");
                             return true;
@@ -204,6 +210,7 @@ public class Main extends JavaPlugin {
                         sender.sendMessage(ChatColor.RED + "Country: " + ChatColor.WHITE + resSet.getString("country"));
                         sender.sendMessage(ChatColor.RED + "Promoted: " + ChatColor.WHITE + (resSet.getInt("promoted") == 0 ? "false" : "true"));
                         sender.sendMessage(ChatColor.RED + "Promoter: " + ChatColor.WHITE + (resSet.getString("promoter") == null ? "no-one" : resSet.getString("promoter")));
+                        sender.sendMessage(ChatColor.RED + "PromoteTime: " + ChatColor.WHITE + (resSet.getTimestamp("promotedTime") == null ? "never" : resSet.getTimestamp("promotedTime").toString()));
                         return true;
                     }
                     sender.sendMessage("Player " + player + " apparently isn't in the database!");
