@@ -3,20 +3,16 @@ package nl.lolmen.apply;
 import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashMap;
-import java.util.logging.Logger;
-
 import nl.lolmen.apply.Applicant.todo;
-
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-
 import ru.tehkode.permissions.PermissionManager;
 import ru.tehkode.permissions.bukkit.PermissionsEx;
 
@@ -125,7 +121,7 @@ public class Main extends JavaPlugin {
                         this.mysql.executeQuery("UPDATE " + this.set.getTable() + " SET "
                                 + "promoter='" + sender.getName() + "', "
                                 + "promoted=1, "
-                                + "promotedTime='" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.fffffffff").format(Calendar.getInstance().getTime()) + "' "
+                                + "promotedTime='" + new Timestamp(new Date().getTime()) + "' "
                                 + "WHERE player='" + player + "'");
                         if (!this.perm.getUser(player).inGroup("Non-Applied")) {
                             sender.sendMessage("He's not in the non-applied group anymore apparently!");
