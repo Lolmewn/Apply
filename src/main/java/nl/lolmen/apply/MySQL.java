@@ -62,8 +62,8 @@ public class MySQL {
         this.fault = fault;
     }
 
-    public int executeStatement(String statemen) {
-        String statement = statemen.replace("\'", "\\'");
+    public int executeStatement(String statement) {
+       // String statement = statemen.replace("'", "\'");
         if (isFault()) {
             System.out.println("[Apply] Can't execute statement, something wrong with connection");
             return 0;
@@ -88,10 +88,10 @@ public class MySQL {
             this.executeStatement(statement);
             return null;
         }
-        String state = statement.replace("\'", "\\'");
+        //String state = statement.replace("'", "\'");
         try {
             this.st = this.con.createStatement();
-            ResultSet set = this.st.executeQuery(state);
+            ResultSet set = this.st.executeQuery(statement);
             //this.st.close();
             return set;
         } catch (SQLException e) {
