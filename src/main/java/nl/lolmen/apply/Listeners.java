@@ -147,7 +147,7 @@ public class Listeners implements Listener {
                     c.setNext(todo.BANNED);
                     p.sendMessage("");
                     p.sendMessage(ChatColor.RED + "Alright. " + ChatColor.WHITE + "Next question: Have you ever been" + ChatColor.RED + " banned" + ChatColor.WHITE + " before?");
-                    p.sendMessage("And if yes, " + ChatColor.RED + "why? " + ChatColor.WHITE "Please be honest.");
+                    p.sendMessage("And if yes, " + ChatColor.RED + "why? " + ChatColor.WHITE + "Please be honest.");
                     return;
                 case BANNED:
                     c.setBanned(event.getMessage());
@@ -180,7 +180,7 @@ public class Listeners implements Listener {
                     p.sendMessage("Age: " + ChatColor.RED + c.getAge());
                     p.sendMessage("Country: " + ChatColor.RED + c.getCountry());
                     p.sendMessage("If you've completed it correctly, type " + ChatColor.RED + "/apply " + ChatColor.WHITE + "To confirm! Otherwise, type " + ChatColor.RED + "/apply reset");
-            }
+            } 
         }
     }
 }
