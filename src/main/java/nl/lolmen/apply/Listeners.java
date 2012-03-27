@@ -31,13 +31,13 @@ public class Listeners implements Listener {
         }
         if (event.getLine(0).equalsIgnoreCase("[Apply]")) {
             if (!event.getPlayer().hasPermission("apply.createSign")) {
-                event.getPlayer().sendMessage("You can't do that :O");
+                event.getPlayer().sendMessage("You aren't allowed to do that!");
                 event.setCancelled(true);
                 return;
             }
             event.setLine(1, ChatColor.GREEN + "Hit this sign");
-            event.setLine(2, ChatColor.GREEN + "to apply to Cent");
-            event.setLine(3, ChatColor.GREEN + "and start fun!");
+            event.setLine(2, ChatColor.GREEN + "to start");
+            event.setLine(3, ChatColor.GREEN + "applying.");
         }
     }
 
@@ -54,10 +54,10 @@ public class Listeners implements Listener {
                     return;
                 }
                 if (set.getRow() == 1) {
-                    event.getPlayer().sendMessage("There is 1 application waiting!");
+                    event.getPlayer().sendMessage("There is 1 application requiring approval!");
                     return;
                 }
-                event.getPlayer().sendMessage("There are " + set.getRow() + " applications waiting!");
+                event.getPlayer().sendMessage("There are " + set.getRow() + " applications requiring approval!");
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -91,13 +91,13 @@ public class Listeners implements Listener {
             }
             if(event.getPlayer().hasPermission("apply.done") && !event.getPlayer().hasPermission("apply.check")){
                //already did it
-                event.getPlayer().sendMessage("You've already applied, thank you!");
+                event.getPlayer().sendMessage("You've already applied!");
                 return;
             }
             //Check if the player already is applied, applying or whatever
             ResultSet set = this.getMySQL().executeQuery("SELECT * FROM " + this.getTable() + " WHERE player='" + event.getPlayer().getName() + "' LIMIT 1");
             if (set == null) {
-                event.getPlayer().sendMessage("Something went wrong with MySQL.. not sure why.");
+                event.getPlayer().sendMessage("Something went wrong with our database, please tell a staff member!");
                 return;
             }
             try {
@@ -146,14 +146,14 @@ public class Listeners implements Listener {
                     c.setGoodat(event.getMessage());
                     c.setNext(todo.BANNED);
                     p.sendMessage("");
-                    p.sendMessage(ChatColor.RED + "All right. " + ChatColor.WHITE + "Next question: Have you ever been" + ChatColor.RED + " banned" + ChatColor.WHITE + " before?");
-                    p.sendMessage("And if yes, " + ChatColor.RED + "why?");
+                    p.sendMessage(ChatColor.RED + "Alright. " + ChatColor.WHITE + "Next question: Have you ever been" + ChatColor.RED + " banned" + ChatColor.WHITE + " before?");
+                    p.sendMessage("And if yes, " + ChatColor.RED + "why? " + ChatColor.WHITE "Please be honest.");
                     return;
                 case BANNED:
                     c.setBanned(event.getMessage());
                     c.setNext(todo.NAME);
                     p.sendMessage("");
-                    p.sendMessage("Okay. We're almost done! The last 3 questions " + ChatColor.RED + "don't have to be true.");
+                    p.sendMessage("Okay. We're almost done, just" + ChatColor.RED + " three " + ChatColor.WHITE + "more questions to go.");
                     p.sendMessage("What is your " + ChatColor.RED + "first name?");
                     return;
                 case NAME:
@@ -173,13 +173,13 @@ public class Listeners implements Listener {
                 case COUNTRY:
                     c.setCountry(event.getMessage());
                     p.sendMessage("");
-                    p.sendMessage("Okay, that were all the questions! Could you look if this is alright?");
+                    p.sendMessage("Okay, you've completed the application. Double check it before sending it off.");
                     p.sendMessage("Good at: " + ChatColor.RED + c.getGoodat());
                     p.sendMessage("Banned: " + ChatColor.RED + c.getBanned());
                     p.sendMessage("Name: " + ChatColor.RED + c.getName());
                     p.sendMessage("Age: " + ChatColor.RED + c.getAge());
                     p.sendMessage("Country: " + ChatColor.RED + c.getCountry());
-                    p.sendMessage("If this is alright, type " + ChatColor.RED + "/apply " + ChatColor.WHITE + "To confirm! Otherwise, type " + ChatColor.RED + "/apply reset");
+                    p.sendMessage("If you've completed it correctly, type " + ChatColor.RED + "/apply " + ChatColor.WHITE + "To confirm! Otherwise, type " + ChatColor.RED + "/apply reset");
             }
         }
     }
