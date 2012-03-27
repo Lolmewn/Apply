@@ -183,6 +183,10 @@ public class Main extends JavaPlugin {
                 }
             }
             if (args[0].equalsIgnoreCase("lookup")) {
+                if(!sender.hasPermission("apply.lookup")){
+                    sender.sendMessage("You don't have permissions to do this!");
+                    return true;
+                }
                 if (args.length == 1) {
                     sender.sendMessage("ERR: args. Correct usage: /apply lookup <player>");
                     return true;
