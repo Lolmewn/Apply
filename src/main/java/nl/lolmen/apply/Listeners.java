@@ -89,11 +89,6 @@ public class Listeners implements Listener {
             if (!s.getLine(0).equalsIgnoreCase("[Apply]")) {
                 return;
             }
-            if(event.getPlayer().hasPermission("apply.done") && !event.getPlayer().hasPermission("apply.check")){
-               //already did it
-                event.getPlayer().sendMessage("You've already applied!");
-                return;
-            }
             //Check if the player already is applied, applying or whatever
             ResultSet set = this.getMySQL().executeQuery("SELECT * FROM " + this.getTable() + " WHERE player='" + event.getPlayer().getName() + "' LIMIT 1");
             if (set == null) {

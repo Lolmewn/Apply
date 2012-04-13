@@ -19,7 +19,7 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
 public class Main extends JavaPlugin {
 
     private PermissionManager perm;
-    public HashMap<String, Applicant> list = new HashMap<String, Applicant>();
+    protected HashMap<String, Applicant> list = new HashMap<String, Applicant>();
     private HashMap<String, String> lookingat = new HashMap<String, String>();
     private Settings set;
     private MySQL mysql;
@@ -69,7 +69,7 @@ public class Main extends JavaPlugin {
         if (!cmd.getName().equalsIgnoreCase("apply")) {
             return false;
         }
-        if (sender.hasPermission("apply.check")) {
+        if (sender.hasPermission("apply.check") && !this.list.containsKey(sender.getName())) {
             //has permission to check other's applications
             if (args.length == 0) {
                 ResultSet resSet = this.mysql.executeQuery("SELECT * FROM " + this.set.getTable() + " WHERE promoted = 0 ORDER BY player");
