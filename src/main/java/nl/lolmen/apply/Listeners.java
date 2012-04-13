@@ -100,7 +100,7 @@ public class Listeners implements Listener {
                     boolean promoted = (set.getInt("promoted") == 0 ? false : true);
                     if (promoted) {
                         if (event.getPlayer().hasPermission("apply.check")) {
-                            this.getPlugin().getServer().dispatchCommand(this.getPlugin().getServer().getConsoleSender(), "apply");
+                            this.getPlugin().getServer().dispatchCommand(event.getPlayer(), "apply");
                         } else {
                             event.getPlayer().sendMessage("You've already been promoted, by " + (set.getString("promoter")==null ? "No-one? eeh.. okay." : set.getString("promoter")));
                         }
