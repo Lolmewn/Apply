@@ -230,6 +230,7 @@ public class Main extends JavaPlugin {
                 //Confirms the data
                 sender.sendMessage("Last thing you need to know: the rules.");
                 this.list.get(sender.getName()).sendRules();
+                this.list.get(sender.getName()).save(); //sends message to mods/admins
                 this.list.remove(sender.getName());
                 return true;
             }
