@@ -89,23 +89,29 @@ public class Listeners implements Listener {
             if (!s.getLine(0).equalsIgnoreCase("[Apply]")) {
                 return;
             }
+            System.out.println("[Apply Debug] BlockClick");
             //Check if the player already is applied, applying or whatever
             ResultSet set = this.getMySQL().executeQuery("SELECT * FROM " + this.getTable() + " WHERE player='" + event.getPlayer().getName() + "' LIMIT 1");
             if (set == null) {
+                System.out.println("[Apply Debug] set==null");
                 event.getPlayer().sendMessage("Something went wrong with our database, please tell a staff member!");
                 return;
             }
             try {
+                System.out.println("[Apply Debug] trying");
                 while (set.next()) {
+                    System.out.println("[Apply Debug] whileing");
                     boolean promoted = (set.getInt("promoted") == 0 ? false : true);
                     if (promoted) {
+                        System.out.println("[Apply Debug] is promoted");
                         if (event.getPlayer().hasPermission("apply.check")) {
                             this.getPlugin().getServer().dispatchCommand(event.getPlayer(), "apply");
                         } else {
-                            event.getPlayer().sendMessage("You've already been promoted, by " + (set.getString("promoter")==null ? "No-one? eeh.. okay." : set.getString("promoter")));
+                            event.getPlayer().sendMessage("You've already been promoted, by " + (set.getString("promoter") == null ? "No-one? eeh.. okay." : set.getString("promoter")));
                         }
                         return;
                     } else {
+                        System.out.println("[Apply Debug] is not promoted");
                         if (set.getString("country") != null) {
                             if (this.getPlugin().list.containsKey(event.getPlayer().getName())) {
                                 event.getPlayer().sendMessage("Please confirm your application: /apply");
@@ -130,6 +136,7 @@ public class Listeners implements Listener {
     public void onPlayerChat(PlayerChatEvent event) {
         Player p = event.getPlayer();
         for (String pl : this.getPlugin().list.keySet()) {
+            //remove chat from all players applying
             event.getRecipients().remove(this.getPlugin().getServer().getPlayer(pl));
         }
         if (this.getPlugin().list.containsKey(p.getName())) {
@@ -175,7 +182,7 @@ public class Listeners implements Listener {
                     p.sendMessage("Age: " + ChatColor.RED + c.getAge());
                     p.sendMessage("Country: " + ChatColor.RED + c.getCountry());
                     p.sendMessage("If you've completed it correctly, type " + ChatColor.RED + "/apply " + ChatColor.WHITE + "To confirm! Otherwise, type " + ChatColor.RED + "/apply reset");
-            } 
+            }
         }
     }
 }
